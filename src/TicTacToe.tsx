@@ -57,6 +57,7 @@ interface GameState {
 	history: {squares: string[], position: number}[];
 	xIsNext: boolean;
 	stepNumber: number;
+	sortMovesDescending: boolean;
 }
 
 export class Game extends React.Component<{}, GameState> {
@@ -70,7 +71,8 @@ export class Game extends React.Component<{}, GameState> {
 				}
 			],
 			stepNumber: 0,
-			xIsNext: true
+			xIsNext: true,
+			sortMovesDescending: false
 		};
 	}
 	
@@ -82,12 +84,14 @@ export class Game extends React.Component<{}, GameState> {
 		let status;		
 			
 		if (winnerDeclared) {
-			status = `Winner: ${winnerDeclared}`;				
+			status = `Winner: ${winnerDeclared.winner}`;				
+		} else if (this.state.stepNumber === 9) {
+			status = 'Game ended in a tie';
 		} else {
 			status = `Next player: ${this.state.xIsNext ? 'X' : 'O'}`;
 		}
 		
-		const moves = history.map((step, move) => {
+		let moves = history.map((step, move) => {
 			const desc = move ? `Go to move # ${move}` : 'Go to game start';
 			const column = step.position >= 0 ? (step.position % 3) + 1 : 0;
 			const row: number = step.position >= 0 ? Math.floor(step.position / 3) + 1 : 0;			
@@ -103,6 +107,11 @@ export class Game extends React.Component<{}, GameState> {
 			);
 		});
 		
+		if (this.state.sortMovesDescending) {
+			moves = moves.reverse();
+		};
+		const direction = this.state.sortMovesDescending ? 'Ascending' : 'Descending';
+		
 		return (
 			<div className="game">
 				<div className="game-board">
@@ -113,10 +122,15 @@ export class Game extends React.Component<{}, GameState> {
 				</div>
 				<div className="game-info">
 					<div>{status}</div>
+					<div><button onClick={() => this.changeSortOrder()}>Sort Moves {direction}</button></div>
 					<ol>{moves}</ol>
 				</div>
 			</div>
 		);
+	}
+	
+	private changeSortOrder(): void {
+		this.setState({sortMovesDescending: !this.state.sortMovesDescending});
 	}
 	
 	private handleClick(index: number): void {
@@ -153,11 +167,11 @@ const lines = [
 		[2, 4, 6]
 	];
 
-function calculateWinner(squares: string[]): string	| null {
+function calculateWinner(squares: string[]): {winner: string, line: number[]}	| null {
 	for(let i = 0; i < lines.length; i++) {
 		const [a,b,c] = lines[i];
 		if(squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-			return squares[a];
+			return {winner: squares[a], line: lines[i]};
 		}
 	}
 	return null;
