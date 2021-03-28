@@ -54,7 +54,13 @@ class Board extends React.Component<BoardProps, {}> {
 	
 }
 
-export class Game extends React.Component<{}, {history: {squares: string[]}[], xIsNext: boolean}> {
+interface GameState {
+	history: {squares: string[]}[];
+	xIsNext: boolean;
+	stepNumber: number;
+}
+
+export class Game extends React.Component<{}, GameState> {
 	
 	constructor(props: {}) {
 		super(props);
@@ -63,14 +69,14 @@ export class Game extends React.Component<{}, {history: {squares: string[]}[], x
 				squares: new Array<string>(9)
 				}
 			],
+			stepNumber: 0,
 			xIsNext: true
 		};
 	}
 	
 	render() {
 		const history = this.state.history;
-		const current = history[history.length -1];
-		//const winner = calculateWinner(current.squares);
+		const current = history[this.state.stepNumber];
 		
 		const winnerDeclared = calculateWinner(current.squares);
 		let status;		
@@ -80,6 +86,15 @@ export class Game extends React.Component<{}, {history: {squares: string[]}[], x
 		} else {
 			status = `Next player: ${this.state.xIsNext ? 'X' : 'O'}`;
 		}
+		
+		const moves = history.map((step, move) => {
+			const desc = move ? `Go to move # ${move}` : 'Go to game start';
+			return (
+				<li key={move}>
+					<button onClick={() => this.jumpTo(move)}>{desc}</button>
+				</li>
+			);
+		});
 		
 		return (
 			<div className="game">
@@ -91,22 +106,32 @@ export class Game extends React.Component<{}, {history: {squares: string[]}[], x
 				</div>
 				<div className="game-info">
 					<div>{status}</div>
-					<ol>{/* TODO */}</ol>
+					<ol>{moves}</ol>
 				</div>
 			</div>
 		);
 	}
 	
 	private handleClick(index: number): void {
-		const history = this.state.history;
+		const history = this.state.history.slice(0, this.state.stepNumber + 1);
 		const current = history[history.length -1];
 		const squares = current.squares.slice();
 		if(calculateWinner(squares) || squares[index]) {
 			return;
 		}
 		squares[index] = this.state.xIsNext ? 'X' : 'O';
-		//this.setState({squares, xIsNext: !this.state.xIsNext});
-		this.setState({history: history.concat([{squares}]), xIsNext: !this.state.xIsNext});
+		this.setState({
+			history: history.concat([{squares}]), 
+			stepNumber: history.length,
+			xIsNext: !this.state.xIsNext
+		});
+	}
+	
+	private jumpTo(move: number): void {
+		this.setState({
+			stepNumber: move,
+			xIsNext: (move % 2) === 0
+		});
 	}
 }
 
