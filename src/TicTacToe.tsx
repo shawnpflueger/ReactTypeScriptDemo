@@ -92,9 +92,13 @@ export class Game extends React.Component<{}, GameState> {
 			const column = step.position >= 0 ? (step.position % 3) + 1 : 0;
 			const row: number = step.position >= 0 ? Math.floor(step.position / 3) + 1 : 0;			
 			const movePosition = column && row ? `(${column}, ${row})` : '';
+			const listClass = this.state.stepNumber !== (history.length -1) && this.state.stepNumber === move ? 'selectedMove' : '';
 			return (
-				<li key={move}>{movePosition}&nbsp;
-					<button onClick={() => this.jumpTo(move)}>{desc}</button>
+				<li key={move} className={listClass}>
+					<span>
+						{movePosition}&nbsp;
+						<button onClick={() => this.jumpTo(move)}>{desc}</button>
+					</span>
 				</li>
 			);
 		});

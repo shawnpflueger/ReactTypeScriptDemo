@@ -7,6 +7,15 @@ ol, ul {
 	padding-left: 30px;
 }
 
+
+.selectedMove {
+	font-weight: bold;
+}
+
+.selectedMove > span {
+	font-weight: normal;
+}
+
 .board-row:after {
 	clear: both;
 	content: "";
