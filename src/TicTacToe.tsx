@@ -4,12 +4,13 @@ import './TicTacToe.css';
 interface SquareProps {
 	value?: string;
 	onClick?: any;
+	highlight?: boolean;
 };
 
 function Square(props: SquareProps) {
 	return (
 			<button 
-				className="square" 
+				className={`square ${props.highlight ? "highlight" : ""}`}
 				onClick={props.onClick}>
 				{props.value}
 			</button>
@@ -18,15 +19,17 @@ function Square(props: SquareProps) {
 
 interface BoardProps {
 	squares: string[];
+	winningSquares: number[];
 	onClick: any;
 }
 
 class Board extends React.Component<BoardProps, {}> {
 	
-	renderSquare(i: number) {
+	renderSquare(i: number) {		
 		return <Square key={i}
 			value={this.props.squares[i]} 
 			onClick={() => this.props.onClick(i)}
+			highlight={this.props.winningSquares.indexOf(i) >= 0}
 			/>; 
 	}
 	
@@ -81,10 +84,12 @@ export class Game extends React.Component<{}, GameState> {
 		const current = history[this.state.stepNumber];
 		
 		const winnerDeclared = calculateWinner(current.squares);
-		let status;		
+		let status;
+		let winningSquares: number[] = [];
 			
 		if (winnerDeclared) {
-			status = `Winner: ${winnerDeclared.winner}`;				
+			status = `Winner: ${winnerDeclared.winner}`;
+			winningSquares = winnerDeclared.line;
 		} else if (this.state.stepNumber === 9) {
 			status = 'Game ended in a tie';
 		} else {
@@ -117,6 +122,7 @@ export class Game extends React.Component<{}, GameState> {
 				<div className="game-board">
 					<Board 
 						squares={current.squares}
+						winningSquares={winningSquares}
 						onClick={(i:number) => this.handleClick(i)}
 					/>
 				</div>
