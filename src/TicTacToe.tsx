@@ -136,7 +136,7 @@ export class Game extends React.Component<{}, GameState> {
 	}
 	
 	private changeSortOrder(): void {
-		this.setState({sortMovesDescending: !this.state.sortMovesDescending});
+		this.setState((s: GameState, p: {}) => {return {sortMovesDescending: !s.sortMovesDescending};});
 	}
 	
 	private handleClick(index: number): void {
@@ -147,11 +147,11 @@ export class Game extends React.Component<{}, GameState> {
 			return;
 		}
 		squares[index] = this.state.xIsNext ? 'X' : 'O';
-		this.setState({
+		this.setState((s: GameState, p: {}) => { return {
 			history: history.concat([{squares, position: index}]), 
 			stepNumber: history.length,
-			xIsNext: !this.state.xIsNext
-		});
+			xIsNext: !s.xIsNext
+		};});
 	}
 	
 	private jumpTo(move: number): void {
