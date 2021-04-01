@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import Game from './TicTacToe';
 import Calculator from './TemperatureCalculator';
+import FilterableProductTable from './ThinkReact';
 
 class Clock extends React.Component<{}, {date: Date}> {
 	
@@ -41,7 +42,10 @@ function App() {
   return (	
     <div className="App">
 	  <Game />
+	  <hr />
 	  <Calculator />
+	  <hr />
+	  <FilterableProductTable />
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
