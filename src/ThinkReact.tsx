@@ -1,16 +1,17 @@
 import React, { Component, ChangeEvent } from 'react';
-import './ThinkReact';
+import './ThinkReact.css';
 
 function loadProducts(): Promise<Product[]> {
-	return new Promise<Product[]>((resolve, reject) => {resolve([
-	{name: 'Football', category: 'Sporting Goods', price: 49.99},
-	{name: 'Baseball', category: 'Sporting Goods', price: 9.99},
-	{name: 'Basketball', category: 'Sporting Goods', price: 29.99, outOfStock: true},
-	{name: 'iPod Touch', category: 'Electronics', price: 99.99},
-	{name: 'iPhone 5', category: 'Electronics', price: 399.99},
-	{name: 'Nexus 7', category: 'Electronics', price: 199.99}
-	
-	]);});
+	return new Promise<Product[]>((resolve, reject) => {
+		resolve([
+			{name: 'Football', category: 'Sporting Goods', price: 49.99},
+			{name: 'Baseball', category: 'Sporting Goods', price: 9.99},
+			{name: 'Basketball', category: 'Sporting Goods', price: 29.99, outOfStock: true},
+			{name: 'iPod Touch', category: 'Electronics', price: 99.99},
+			{name: 'iPhone 5', category: 'Electronics', price: 399.99, outOfStock: true},
+			{name: 'Nexus 7', category: 'Electronics', price: 199.99}	
+			]);
+		});
 }
 
 interface Product {
@@ -22,14 +23,14 @@ interface Product {
 
 function ProductRow(props: Product) {
 	return (
-		<tr>
+		<tr className={props.outOfStock ? "outOfStock" : ""}>
 			<td>{props.name}</td>
 			<td>${props.price}</td>
 		</tr>);
 }
 
 function ProductCategoryRow(props: {name?: string}) {
-	return (<tr><td colSpan={2}>{props.name}</td></tr>);
+	return (<tr className="category"><td colSpan={2}>{props.name}</td></tr>);
 }
 
 interface ProductTableProperties {
@@ -52,21 +53,31 @@ class ProductTable extends Component<ProductTableProperties, {products: Product[
 		const products = this.state.products.slice();
 		const categories = products.map(p => p.category).filter((v, i, s) => s.indexOf(v) === i);
 		
+		const filterLower = this.props.filterBy.toLowerCase();
+		
 		const productTableRows = new Array<any>();
 		for(const cat of categories) {
 			productTableRows.push(<ProductCategoryRow key={cat} name={cat} />);
-			for(const product of products.filter(p => p.category === cat)) {
-				productTableRows.push(<ProductRow name={product.name} price={product.price} outOfStock={product.outOfStock} />);
+			for(const product of products
+									.filter(p => p.category === cat)
+									.filter(p => p.name.toLowerCase().indexOf(filterLower) > -1)) {
+				if(!this.props.includeOnlyInStock || !product.outOfStock) {
+					productTableRows.push(<ProductRow key={product.name} name={product.name} price={product.price} outOfStock={product.outOfStock} />);
+				}
 			}
 		}
 		
 		return (
 		<table>
-			<th>
-				<td>Name</td>
-				<td>Price</td>
-			</th>
-			{productTableRows}
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Price</th>
+				</tr>
+			</thead>
+			<tbody>
+				{productTableRows}
+			</tbody>
 		</table>);
 	}
 }
@@ -95,7 +106,7 @@ class FilterableProductTable extends Component<{}, {searchText: string, onlyInSt
 	}
 	
 	private stockCheckChanged = (e: ChangeEvent<HTMLInputElement>) => {
-		this.setState({onlyInStock: "on" === e.target.value});
+		this.setState((s) => {return {onlyInStock: !s.onlyInStock};});
 	}
 	
 	render() {
