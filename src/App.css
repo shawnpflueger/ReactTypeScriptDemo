@@ -24,6 +24,16 @@
   color: white;
 }
 
+table {
+	margin-bottom: 5px;
+}
+
+td {
+	padding: 10px;
+	border: groove white;
+	cursor: pointer;
+}
+
 .App-link {
   color: #61dafb;
 }

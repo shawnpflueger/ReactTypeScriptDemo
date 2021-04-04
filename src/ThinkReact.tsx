@@ -23,7 +23,7 @@ interface Product {
 
 function ProductRow(props: Product) {
 	return (
-		<tr className={props.outOfStock ? "outOfStock" : ""}>
+		<tr className={props.outOfStock ? "outOfStock" : undefined}>
 			<td>{props.name}</td>
 			<td>${props.price}</td>
 		</tr>);
