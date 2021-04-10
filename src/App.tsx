@@ -1,9 +1,11 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import logo from './logo.svg';
 import './App.css';
 import Game from './TicTacToe';
 import Calculator from './TemperatureCalculator';
 import FilterableProductTable from './ThinkReact';
+import ThemeContainer from './ThemeContext';
+import PortalContainer from './ModalPortal';
 
 class Clock extends React.Component<{}, {date: Date}> {
 	
@@ -38,10 +40,17 @@ class Clock extends React.Component<{}, {date: Date}> {
 	}
 }
 
-/*function showGame() {
-	console.log('Show Game');
-}*/
-type DemoComponent = '' | 'Game' | 'TempCalc' | 'Products';
+function DemoTab(props: {componentType: DemoComponent, description: string, changer: (ct: DemoComponent) => void}) {
+	return (
+		<td 
+			key={props.componentType} 
+			onClick={() => props.changer(props.componentType)}>
+				{props.description}
+		</td>
+	);
+}
+
+type DemoComponent = '' | 'Game' | 'TempCalc' | 'Products' | 'ThemeContext' | 'ModalPortal';
 
 class App extends Component<{}, {displayComponent: DemoComponent}> {
 	
@@ -51,7 +60,6 @@ class App extends Component<{}, {displayComponent: DemoComponent}> {
 	}
 	
 	show = (component: DemoComponent) => {
-		console.log(`Show ${component}`);
 		this.setState({displayComponent: component})
 	}
 	
@@ -61,7 +69,7 @@ class App extends Component<{}, {displayComponent: DemoComponent}> {
 		switch (demoComponentName) {
 			case '': {
 				demoComponent = (
-					<div>
+					<Fragment>
 						<img src={logo} className="App-logo" alt="logo" />
 						<p>
 							Edit <code>src/App.tsx</code> and save to reload.
@@ -74,7 +82,7 @@ class App extends Component<{}, {displayComponent: DemoComponent}> {
 						>
 						  Learn React
 						</a>
-					</div>);
+					</Fragment>);
 					break;
 			}
 			case 'Game': {
@@ -95,6 +103,14 @@ class App extends Component<{}, {displayComponent: DemoComponent}> {
 				);
 				break;
 			}
+			case 'ThemeContext': {
+				demoComponent = <ThemeContainer />;
+				break
+			}
+			case 'ModalPortal': {
+				demoComponent = <PortalContainer />;
+				break;
+			}
 		}
   return (	
     <div className="App">
@@ -104,18 +120,12 @@ class App extends Component<{}, {displayComponent: DemoComponent}> {
 		<table>
 			<thead>
 				<tr>
-					<td onClick={() => this.show('Game')}>
-						Game
-					</td>
-					<td onClick={() => this.show('TempCalc')}>
-						Temparature Calculator
-					</td>
-					<td onClick={() => this.show('Products')}>
-						Products
-					</td>
-					<td onClick={() => this.show('')}>
-						Learn React
-					</td>
+					<DemoTab componentType="Game" description="Game" changer={this.show} />
+					<DemoTab componentType="TempCalc" description="Temperature Calculator" changer={this.show} />
+					<DemoTab componentType="Products" description="Products" changer={this.show} />
+					<DemoTab componentType="ThemeContext" description="Themes and Context" changer={this.show} />
+					<DemoTab componentType="ModalPortal" description="Modal Portals" changer={this.show} />
+					<DemoTab componentType="" description="Learn React" changer={this.show} />					
 				</tr>
 			</thead>
 		</table>

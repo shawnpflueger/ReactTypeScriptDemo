@@ -1,4 +1,4 @@
-import React, { Component, ChangeEvent } from 'react';
+import React, { Component, ChangeEvent, Fragment } from 'react';
 import './ThinkReact.css';
 
 function loadProducts(): Promise<Product[]> {
@@ -113,10 +113,10 @@ class FilterableProductTable extends Component<{}, {searchText: string, onlyInSt
 		const includeOnlyInStock = this.state.onlyInStock;
 		const filterBy = this.state.searchText;
 		return (
-		<div>
+		<Fragment>
 			<SearchBar onSearchChanged={this.searchChanged} onOnlyInStockChanged={this.stockCheckChanged}/>
 			<ProductTable includeOnlyInStock={includeOnlyInStock} filterBy={filterBy}/>		
-		</div>);
+		</Fragment>);
 	}
 };
 
