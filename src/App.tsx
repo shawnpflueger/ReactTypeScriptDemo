@@ -41,153 +41,87 @@ class Clock extends React.Component<{}, {date: Date}> {
 	}
 }
 
-function DemoTab(props: {componentType: DemoComponent, description: string, changer: (ct: DemoComponent) => void}) {
+function LearnReact() {
+	return (
+		<Fragment>
+			<img src={logo} className="App-logo" alt="logo" />
+			<p>
+				Edit <code>src/App.tsx</code> and save to reload.
+			</p>		
+			<a
+			  role="button"
+			  className="App-link"
+			  href="https://reactjs.org"
+			  target="_blank"
+			  rel="noopener noreferrer"
+			>
+			  Learn React
+			</a>
+		</Fragment>
+	);
+}
+
+function DemoTab(props: {changer: (dt: Demo) => void,
+						demoType: Demo}) {
 	return (
 		<td 
-			key={props.componentType} 
-			onClick={() => props.changer(props.componentType)}>
-				{props.description}
+			key={props.demoType.componentId} 
+			onClick={() => props.changer(props.demoType)}>
+				{props.demoType.description}
 		</td>
 	);
 }
 
 type DemoComponent = '' | 'Game' | 'TempCalc' | 'Products' | 'ThemeContext' | 'ModalPortal' | 'RenderProps';
 
-class App extends Component<{}, {displayComponent: DemoComponent}> {
+interface Demo {
+	componentId: DemoComponent;
+	description: string; 
+	renderProp: () => any; 
+	displayOrder: number;
+	default?: boolean
+}
+
+const demos: Demo[] = [
+	{componentId: '' as DemoComponent, description: 'Learn React', displayOrder: 999, renderProp: () => (<LearnReact />), default: true},
+	{componentId: 'Game' as DemoComponent, description: 'Game', displayOrder: 0, renderProp: () => (<Game />)},
+	{componentId: 'TempCalc', description: 'Temperature Calculator', displayOrder: 1, renderProp: () => (<Calculator />)},
+	{componentId: 'Products', description: 'Products', displayOrder: 2, renderProp: () => (<FilterableProductTable />)},
+	{componentId: 'ThemeContext', description: 'Themes and Context', displayOrder: 3, renderProp: () => (<ThemeContainer />)},
+	{componentId: 'ModalPortal', description: 'Modal Portals', displayOrder: 4, renderProp: () => (<PortalContainer />)},
+	{componentId: 'RenderProps', description: 'RenderProps', displayOrder: 5, renderProp: () => (<MouseTracker />)}
+];
+
+class App extends Component<{}, {displayDemo: Demo}> {
 	
 	constructor(props: {}) {
 		super(props);
-		this.state = {displayComponent: ''};
+		this.state = {displayDemo: demos[0]};		
 	}
 	
-	show = (component: DemoComponent) => {
-		this.setState({displayComponent: component})
-	}
-	
-	private prepareDisplayComponent() {
-		const demoComponentName = this.state.displayComponent;
-		switch (demoComponentName) {
-			case '': {
-				return (
-					<Fragment>
-						<img src={logo} className="App-logo" alt="logo" />
-						<p>
-							Edit <code>src/App.tsx</code> and save to reload.
-						</p>		
-						<a
-						  className="App-link"
-						  href="https://reactjs.org"
-						  target="_blank"
-						  rel="noopener noreferrer"
-						>
-						  Learn React
-						</a>
-					</Fragment>);
-		//			break;
-			}
-			case 'Game': {
-				return (
-					<Game />
-				);
-				//break;
-			}
-			case 'TempCalc': {
-				return (
-					<Calculator />
-				);
-				//break;
-			}
-			case 'Products': {
-				return (
-					<FilterableProductTable />
-				);
-				//break;
-			}
-			case 'ThemeContext': {
-				return <ThemeContainer />;
-				//break
-			}
-			case 'ModalPortal': {
-				return <PortalContainer />;
-				//break;
-			}
-			case 'RenderProps': {
-				return <MouseTracker />;
-			}
-		}
+	show = (demo: Demo) => {
+		this.setState(s => ({displayDemo: demo}));		
 	}
 	
 	render() {
-		//const demoComponentName = this.state.displayComponent;
-		const demoComponent = this.prepareDisplayComponent();
-		/*switch (demoComponentName) {
-			case '': {
-				demoComponent = (
-					<Fragment>
-						<img src={logo} className="App-logo" alt="logo" />
-						<p>
-							Edit <code>src/App.tsx</code> and save to reload.
-						</p>		
-						<a
-						  className="App-link"
-						  href="https://reactjs.org"
-						  target="_blank"
-						  rel="noopener noreferrer"
-						>
-						  Learn React
-						</a>
-					</Fragment>);
-					break;
-			}
-			case 'Game': {
-				demoComponent = (
-					<Game />
-				);
-				break;
-			}
-			case 'TempCalc': {
-				demoComponent = (
-					<Calculator />
-				);
-				break;
-			}
-			case 'Products': {
-				demoComponent = (
-					<FilterableProductTable />
-				);
-				break;
-			}
-			case 'ThemeContext': {
-				demoComponent = <ThemeContainer />;
-				break
-			}
-			case 'ModalPortal': {
-				demoComponent = <PortalContainer />;
-				break;
-			}
-		}*/
-  return (	
-    <div className="App">
-	  
-      <header className="App-header">
-		<Clock />
-		<table>
-			<thead>
-				<tr>
-					<DemoTab componentType="Game" description="Game" changer={this.show} />
-					<DemoTab componentType="TempCalc" description="Temperature Calculator" changer={this.show} />
-					<DemoTab componentType="Products" description="Products" changer={this.show} />
-					<DemoTab componentType="ThemeContext" description="Themes and Context" changer={this.show} />
-					<DemoTab componentType="ModalPortal" description="Modal Portals" changer={this.show} />
-					<DemoTab componentType="RenderProps" description="Render Props" changer={this.show} />
-					<DemoTab componentType="" description="Learn React" changer={this.show} />					
-				</tr>
-			</thead>
-		</table>
-		{demoComponent}		
-      </header>
-    </div>
-  );
+		const demoOptions = demos.slice();
+		demoOptions.sort((da, db) => da.displayOrder - db.displayOrder);
+		return (	
+			<div className="App">
+			  
+				<header className="App-header">
+					<Clock />
+					<table>
+						<thead>
+							<tr>
+								{demoOptions.map(d => (<DemoTab key={d.componentId} changer={this.show} demoType={d} />))}									
+							</tr>
+						</thead>
+					</table>					
+					{this.state.displayDemo ? this.state.displayDemo.renderProp() : null}
+				</header>
+			</div>
+		);
 	}
 }
 
