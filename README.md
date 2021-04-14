@@ -1,6 +1,49 @@
+# React Typescript Demos
+
+This project is mostly just me (shawnpflueger) going through various React demos from the [React Docs](https://reactjs.org)
+and attempting to piece them together using [Typescript](https://www.typescriptlang.org/) instead of Javascript. 
+Hamstrung by both the fact that the docs are all written with just Javascript in mind
+and also I was only using Notepad++ for all of it which has no built in Typescript support. 
+So I basically just used some clues from the Typescript compilers and how React was behaving to figure things out.
+Then I found this helpful resource: https://github.com/typescript-cheatsheets/react#reacttypescript-cheatsheets
+
+# Demos
+
+As of this writing the repository basically consists of 7 demonstration items.
+
+## Clock
+
+This should show on every page and is implemented inside the App.tsx file. 
+It was pulled/inspired by the [Rendering Elements](https://reactjs.org/docs/renderings-elements.html) documentation.
+I thought it would be neat to try out the timer functionality and have something relatively static on the page as you go through the various demos.
+
+## Game
+
+TODO
+
+## Temperature Calculator
+
+TODO
+
+## Product Table
+
+TODO
+
+## Theme Context
+
+TODO
+
+## Modal Portal
+
+TODO
+
+## Mouse Tracker
+
+TODO
+
 # Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Bootstrapped using yarn with [Create React App](https://github.com/facebook/create-react-app) --typescript.
 
 ## Available Scripts
 
