@@ -132,8 +132,8 @@ class App extends Component<{}, {displayDemo: Demo}> {
 		// Use the first demo we find as default, or just the first in the array
 		const defaultDemo = demos.find(d => d.default) ?? demos[0];
 		this.state = {displayDemo: defaultDemo};
-		demoOptions = demos.slice();
-		demoOptions.sort((da, db) => da.displayOrder - db.displayOrder);
+		this.demoOptions = demos.slice();
+		this.demoOptions.sort((da, db) => da.displayOrder - db.displayOrder);
 	}
 	
 	// Just update the demo in the state.

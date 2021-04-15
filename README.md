@@ -9,7 +9,12 @@ Then I found this helpful resource: https://github.com/typescript-cheatsheets/re
 
 # Demos
 
-As of this writing the repository basically consists of 7 demonstration items.
+As of this writing the repository basically consists of 7 demonstration items. 
+I'm still working on adding more commentary in the files themselves along with tests.
+If you want some commentary on the basics, along with a bit of a look at some the more 
+advanced concepts of React, take a look at App.tsx. 
+I'm continuously updating and improving it as I get to know React better.
+And expect some additional features down the line as I explore React-adjacent libraries.
 
 ## Clock
 
@@ -19,7 +24,11 @@ I thought it would be neat to try out the timer functionality and have something
 
 ## Game
 
-TODO
+[React Tutorial]https://reactjs.org/tutorial/tutorial.html
+
+That's the step by step on how this component came about. Then I added some of my own floourishes 
+and of course implemented all the suggestions from the end.
+Currently I have a couple TODOs on there I will maybe someday get to.
 
 ## Temperature Calculator
 
