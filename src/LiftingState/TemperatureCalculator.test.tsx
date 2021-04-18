@@ -44,7 +44,7 @@ test('convert celsius temperatures to fahrenheit temperatures', () => {
   expect(fahrenheit).toEqual(-40);
 });
 
-test.only('changing the temperature in one input should change the value in the other input', () => {
+test('changing the temperature in one input should change the value in the other input', () => {
 	const component = render(<Calculator />);
 	
 	const celsiusInput = screen.getByTestId('input-Celsius');

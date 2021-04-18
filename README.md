@@ -41,7 +41,10 @@ documentation for the time being
 
 ## Product Table
 
-TODO
+[Thinking in React](https://reactjs.org/docs/thinking-in-react.html)
+
+This is a blind implementation of the Thinking in React demo. I didn't, and still haven't looked
+at the Code Pen examples, so I don't know if my implementation is correct or close or totally off base.
 
 ## Theme Context
 
