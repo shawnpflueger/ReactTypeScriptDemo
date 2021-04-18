@@ -24,7 +24,7 @@ I thought it would be neat to try out the timer functionality and have something
 
 ## Game
 
-[React Tutorial]https://reactjs.org/tutorial/tutorial.html
+[React Tutorial](https://reactjs.org/tutorial/tutorial.html)
 
 That's the step by step on how this component came about. Then I added some of my own floourishes 
 and of course implemented all the suggestions from the end.
@@ -32,7 +32,12 @@ Currently I have a couple TODOs on there I will maybe someday get to.
 
 ## Temperature Calculator
 
-TODO
+[Lifting State Up](https://reactjs.org/docs/lifting-state-up.html)
+
+Created this set of components based on the Lifting State Up examples. 
+All you have to do is basically follow along there and it will all make sense.
+There's a bunch of TODO items I put in there for now, but figured I would leave it close to the 
+documentation for the time being
 
 ## Product Table
 
