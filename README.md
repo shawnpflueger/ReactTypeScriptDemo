@@ -48,7 +48,10 @@ at the Code Pen examples, so I don't know if my implementation is correct or clo
 
 ## Theme Context
 
-TODO
+[Context](https://reactjs.org/docs/context.html)
+
+Not quite the full example code pulled from the Context examples but enough of a taste, 
+just showing off the theming idea.
 
 ## Modal Portal
 
