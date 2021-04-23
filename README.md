@@ -63,7 +63,11 @@ Other suggested uses (from the linked page) are hovercards and tooltops.
 
 ## Mouse Tracker
 
-TODO
+[Render Props](https://reactjs.org/docs/render-props.html)
+
+Render props allow you to pass render information down to components, from parent to child. 
+Instead of just leaving the child to determine basically everything, or passing relatively static children.
+Render props can apparently be used in most places a [Higher Order Component](https://reactjs.org/docs/higher-order-components.html) might also make sense.
 
 # Getting Started with Create React App
 
