@@ -55,7 +55,11 @@ just showing off the theming idea.
 
 ## Modal Portal
 
-TODO
+[Portals](https://reactjs.org/docs/portals.html)
+
+Portals seem to me to be a way of jumping out of the direct React html and yet still generating React 
+component based content. This example is a very ugly modal/dialog example, I didn't apply any CSS in other words.
+Other suggested uses (from the linked page) are hovercards and tooltops.
 
 ## Mouse Tracker
 

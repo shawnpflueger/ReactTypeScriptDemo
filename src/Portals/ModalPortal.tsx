@@ -2,15 +2,10 @@ import ReactDOM from 'react-dom';
 import React, {Fragment, Component} from 'react';
 import './ModalPortal.css';
 
-function PortalContainer() {
-	return (
-		<>
-			<div id="app-root"><Parent /></div>
-			<div id="modal-root"></div>
-		</>
-	);
-}
-
+// Our actual modal class where we grab some expected elements from the dom
+// and work against those. This differs from the document's example because we use a wrapper 
+// component for use in the demo page and so the elements are added and removed from the page.
+// Since I'm still new to this, not sure that's still the best way to do that.
 class Modal extends Component<{}, {}> {
 		
 	private el: any;
@@ -18,11 +13,13 @@ class Modal extends Component<{}, {}> {
 	
 	constructor(props: {}) {
 		super(props);
+		// Get fresh references whenever the component is created
 		this.el = document.createElement('div');
 		this.modalRoot = document.getElementById('modal-root');
 	}
 	
 	componentDidMount() {
+		// Commentary from the docs: https://reactjs.org/docs/portals.html#event-bubbling-through-portals
 		// The portal element is inserted in the DOM tree after
 		// the Modal's children are mounted, meaning that children
 		// will be mounted on a detached DOM node. If a child
@@ -35,10 +32,13 @@ class Modal extends Component<{}, {}> {
 	}
 	
 	componentWillUnmount() {
+		// Make sure we clean up after ourselves
 		this.modalRoot?.removeChild(this.el);
 	}
 	
 	render() {
+		// Use the special createPortal for rendering by droping in
+		// our children
 		return ReactDOM.createPortal(
 			this.props.children,
 			this.el
@@ -46,6 +46,9 @@ class Modal extends Component<{}, {}> {
 	}
 }
 
+// This parent click counter, since the click counter is on the div, it counts click anywhere 
+// rather than just on the modal button. I should add some propagation stoppage
+// I also had to add some state to hide/close the modal so we can jump to other demos
 class Parent extends Component<{}, {clicks: number, showModal: boolean}> {
 	
 	constructor(props: {}) {
@@ -66,6 +69,7 @@ class Parent extends Component<{}, {clicks: number, showModal: boolean}> {
 	
 	render() {
 		
+		// Only define the modal when we are showing it
 		const modal = this.state.showModal ? 
 			(<Modal><Child toClose={this.updateModal}/></Modal> )
 			: null;		
@@ -86,6 +90,7 @@ class Parent extends Component<{}, {clicks: number, showModal: boolean}> {
 	}
 }
 
+// This child of course is out actual modal content, with an added button to close it
 function Child(props: {toClose: any}) {
 	// The click event on this button will bubble up to the parent,
 	// because there is no 'onClick' attribute defined
@@ -94,6 +99,17 @@ function Child(props: {toClose: any}) {
 			<button>Click</button>
 			<button onClick={props.toClose}>Close</button>
 		</div>
+	);
+}
+
+// A little container so we can include this in the overall demo setup
+function PortalContainer() {
+	// Using a shorthand fragment here: https://reactjs.org/docs/fragments.html
+	return (
+		<>
+			<div id="app-root"><Parent /></div>
+			<div id="modal-root"></div>
+		</>
 	);
 }
 
