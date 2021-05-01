@@ -16,6 +16,13 @@ advanced concepts of React, take a look at App.tsx.
 I'm continuously updating and improving it as I get to know React better.
 And expect some additional features down the line as I explore React-adjacent libraries.
 
+## React Router
+
+At the top of the page you can choose to swap between my original "Tab" navigation, 
+or using [React Router](https://reactrouter.com/web/guides/quick-start). Like the original app 
+navigation it's all generated from the `Demo` definitions themselves. Of course since the 
+Browser Router context provider is hidden behind a checkbox, by default the routing doesn't work at all.
+
 ## Clock
 
 This should show on every page and is implemented inside the App.tsx file. 

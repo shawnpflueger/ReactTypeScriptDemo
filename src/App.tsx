@@ -1,4 +1,5 @@
 import React, {Component, Fragment} from 'react';
+import { BrowserRouter, Switch, Route, Link } from 'react-router-dom';
 import logo from './logo.svg';
 import './App.css';
 import Game from './Tutorial/TicTacToe';
@@ -120,10 +121,86 @@ function DemoTab(props: {changer: (dt: Demo) => void,
 	);
 }
 
+function DemoOptionsTable(props: {demoOptions: Demo[], toDisplay: (demo: Demo) => void}) {
+	return (
+		<table>
+			<thead>
+				<tr>
+					{props.demoOptions
+						.map(d => (<DemoTab 
+									key={d.componentId} 
+									changer={props.toDisplay} 
+									demoType={d} />))}	
+				</tr>
+			</thead>
+		</table>
+	);
+}
+
+function DemoDisplay(props: {displayDemo: Demo}) {
+	return (
+		<main>
+			{props.displayDemo.resourceLink && (<a target="_blank" href={props.displayDemo.resourceLink} rel="noreferrer">Look here for more information</a>)}
+			{props.displayDemo !== null && props.displayDemo.renderProp()}
+		</main>
+	);
+}
+
+// Encapsulating React Router code in this one component, could probably break it into two
+class DemoOptionsRouter extends Component<{demoOptions: Demo[]}, {}> {
+	
+	render() {
+		return (
+			<BrowserRouter>
+				<div>
+					<nav>
+						<ul>
+						{this.props.demoOptions.map(d => (
+							<li key={d.componentId}>
+								<Link to={`/${d.componentId}`}>{d.description}</Link>
+							</li>
+							))}
+						</ul>
+					</nav>
+					{
+						<main>
+							<Switch>
+								{this.props.demoOptions.map(d => (
+									<Route key={d.componentId} path={`/${d.componentId}`}>
+										{d.resourceLink && (<a target="_blank" href={d.resourceLink} rel="noreferrer">Look here for more information</a>)}
+										{d.renderProp()}
+									</Route>
+									))
+								}
+							</Switch>
+						</main>
+					}
+				</div>
+			</BrowserRouter>
+		);
+	};
+}
+
+function NavSwitcher(props: {switchNavMode: () => void}) {
+	function wrapChange() {
+		//Because we're outside the actual router context, we need to manipulate the real browser API
+		window.history.pushState({}, '', '/');
+		props.switchNavMode();
+	}
+	
+	return (
+		<span>
+			<input id="nav-mode" type="checkbox" onChange={wrapChange}/>
+			<label htmlFor="nav-mode">Use React Router Navigation</label>
+		</span>
+		
+	);
+}
+
 
 // The guiding demo display, controlling the whole application by keeping track of the active demo
 // in the state
-class App extends Component<{}, {displayDemo: Demo}> {
+class App extends Component<{}, {displayDemo: Demo, navMode: 'Router' | 'Tab'}> {
 	
 	private readonly demoOptions: Demo[];
 	
@@ -131,7 +208,7 @@ class App extends Component<{}, {displayDemo: Demo}> {
 		super(props);
 		// Use the first demo we find as default, or just the first in the array
 		const defaultDemo = demos.find(d => d.default) ?? demos[0];
-		this.state = {displayDemo: defaultDemo};
+		this.state = {displayDemo: defaultDemo, navMode: 'Tab'};
 		this.demoOptions = demos.slice();
 		this.demoOptions.sort((da, db) => da.displayOrder - db.displayOrder);
 	}
@@ -143,6 +220,10 @@ class App extends Component<{}, {displayDemo: Demo}> {
 		this.setState(s => ({displayDemo: demo}));		
 	}
 	
+	private switchNavMode = () => {
+		this.setState(s => ({navMode: s.navMode === 'Router' ? 'Tab' : 'Router'}));
+	}
+	
 	render() {	
 		// Map the demoOptions property to DemoTab components
 		// Use conditional rendering (https://reactjs.org/docs/conditional-rendering.html)
@@ -151,16 +232,16 @@ class App extends Component<{}, {displayDemo: Demo}> {
 		return (	
 			<div className="App">			  
 				<header className="App-header">
+					<NavSwitcher switchNavMode={this.switchNavMode} />
 					<Clock />
-					<table>
-						<thead>
-							<tr>
-								{this.demoOptions.map(d => (<DemoTab key={d.componentId} changer={this.show} demoType={d} />))}	
-							</tr>
-						</thead>
-					</table>
-					{this.state.displayDemo.resourceLink && (<a target="_blank" href={this.state.displayDemo.resourceLink} rel="noreferrer">Look here for more information</a>)}
-					{this.state.displayDemo !== null && this.state.displayDemo.renderProp()}
+					{this.state.navMode === 'Tab' 
+						&& (<><DemoOptionsTable demoOptions={this.demoOptions} toDisplay={this.show} />
+						 <DemoDisplay displayDemo={this.state.displayDemo} /></>)}
+					{this.state.navMode === 'Router'
+						&& (
+						<>
+							<DemoOptionsRouter demoOptions={this.demoOptions}/>
+						</>)}
 				</header>
 			</div>
 		);
