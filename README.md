@@ -23,6 +23,9 @@ or using [React Router](https://reactrouter.com/web/guides/quick-start). Like th
 navigation it's all generated from the `Demo` definitions themselves. Of course since the 
 Browser Router context provider is hidden behind a checkbox, by default the routing doesn't work at all.
 
+In the process of adding this I learned the hard way that if you're working on components outside 
+that `<BrowserRouter>` then you're on your own for trying to navigate, so can't use the `useHistory` hook.
+
 ## Clock
 
 This should show on every page and is implemented inside the App.tsx file. 
